@@ -13,7 +13,7 @@
 #' @import GenomicRanges
 #' @rawNamespace import(ensembldb, except = c(select, filter))
 #' @importFrom GenomicFeatures genes
-#' @importFrom GenomeInfoDb keepStandardChromosomes as.data.frame seqlevelsStyle genome
+#' @importFrom GenomeInfoDb keepStandardChromosomes seqlevelsStyle genome
 #' @importFrom glue glue
 #' @importFrom magrittr %>%
 #' @importFrom dplyr as_tibble mutate distinct select filter
@@ -73,7 +73,7 @@ GOfuncR <- function(sigRegions = sigRegions,
     plyranges::mutate(candidate = plyranges::count_overlaps(., sigRegions)) %>% 
     plyranges::mutate(candidate = dplyr::case_when(candidate != 0 ~ 1,
                                                    candidate == 0 ~ 0)) %>%
-    GenomeInfoDb::as.data.frame() %>%
+    BiocGenerics::as.data.frame() %>%
     dplyr::select(seqnames, start, end, candidate) %>%
     tidyr::unite(c("seqnames","start"), col = "seqstart", sep = ":") %>%
     tidyr::unite(c("seqstart","end"), col = "coordinate", sep = "-") 
