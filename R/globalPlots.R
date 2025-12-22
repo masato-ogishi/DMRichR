@@ -36,7 +36,6 @@ windows <- function(bs.filtered.bsseq = bs.filtered.bsseq,
 #' @param bs.filtered.bsseq Smoothed \code{bsseq} object with a testCovariate in \code{pData}
 #' @param genome A character vector of the genome of interest (i.e. "hg38")
 #' @return A matrix of smoothed individual methylation values
-#' @importFrom plyranges filter
 #' @importFrom magrittr %>%
 #' @importFrom bsseq getMeth
 #' @importClassesFrom bsseq BSseq 
@@ -50,7 +49,7 @@ CGi <- function(bs.filtered.bsseq = bs.filtered.bsseq,
   
   genome %>%
     DMRichR::getCpGs() %>% 
-    plyranges::filter(type == "islands") %>% 
+    filter(type == "islands") %>% 
     bsseq::getMeth(BSseq = bs.filtered.bsseq,
                    regions = .,
                    type = "smooth",

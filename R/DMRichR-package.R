@@ -1,8 +1,11 @@
 #' DMRichR
 #'
 #' Enrich your DMR analysis
-#' @name DMRichR
-#' @docType package
+#' @keywords internal
+"_PACKAGE"
+
+## usethis namespace: start
+## usethis namespace: end
 NULL
 
 #' onAttach

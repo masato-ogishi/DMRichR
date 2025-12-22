@@ -78,7 +78,6 @@ Manhattan <- function(backgroundAnno = backgroundAnno,
 #' @importFrom glue glue
 #' @importFrom magrittr %>%
 #' @importFrom minfi getAnnotation
-#' @importFrom plyranges mutate filter
 #' @references \url{https://support.bioconductor.org/p/78652/}
 #' @examples
 #' \dontrun{ 
@@ -119,7 +118,7 @@ arrayLift <- function(probes = probes,
     library(FDb.InfiniumMethylation.hg19)
     
     array <- FDb.InfiniumMethylation.hg19::get450k() %>%
-      plyranges::mutate(rowname = names(.))
+      mutate(rowname = names(.))
     
   }else if(array == "27K"){
     
@@ -128,7 +127,7 @@ arrayLift <- function(probes = probes,
     library(FDb.InfiniumMethylation.hg19)
     
     array <- FDb.InfiniumMethylation.hg19::get27k() %>%
-      plyranges::mutate(rowname = names(.))
+      mutate(rowname = names(.))
     
   }else{
     stop(glue::glue("{array} is not suppourted, please choose EPIC, 450K, or 27K"))
@@ -142,7 +141,7 @@ arrayLift <- function(probes = probes,
   }
   
   hg38 <- array %>%
-    plyranges::filter(rowname %in% probes) %>% 
+    filter(rowname %in% probes) %>% 
     rtracklayer::liftOver(AnnotationHub::AnnotationHub()[["AH14150"]]) %>%
     unlist()
   

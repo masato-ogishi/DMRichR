@@ -5,7 +5,6 @@
 #' @param regions A \code{GRanges} object of background regions returned by \code{dmrseq::dmrseq()}
 #' @return Creates a folder for HOMER with bed files
 #' @importFrom magrittr %>%
-#' @importFrom plyranges filter
 #' @export prepareHOMER
 #' 
 prepareHOMER <- function(sigRegions = sigRegions,
@@ -17,11 +16,11 @@ prepareHOMER <- function(sigRegions = sigRegions,
     DMRichR::gr2bed("HOMER/DMRs.bed")
   
   sigRegions %>%
-    plyranges::filter(stat > 0) %>% 
+    filter(stat > 0) %>% 
     DMRichR::gr2bed("HOMER/DMRs_hyper.bed")
   
   sigRegions %>%
-    plyranges::filter(stat < 0) %>% 
+    filter(stat < 0) %>% 
     DMRichR::gr2bed("HOMER/DMRs_hypo.bed")
   
   regions %>%

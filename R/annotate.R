@@ -13,7 +13,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom glue glue glue_collapse
 #' @importFrom GenomeInfoDb genome seqlevelsStyle
-#' @importFrom plyranges join_overlap_left select mutate
+#' @importFrom plyranges join_overlap_left
 #' @export annotateRegions
 #' 
 annotateRegions <- function(regions = sigRegions,
@@ -47,22 +47,22 @@ annotateRegions <- function(regions = sigRegions,
   
   regionsCpG <- regions %>% 
     plyranges::join_overlap_left(CpGs %>%
-                                   plyranges::filter(type == "islands") %>% 
-                                   plyranges::select(CpG.Island = type)) %>%
+                                   filter(type == "islands") %>% 
+                                   select(CpG.Island = type)) %>%
     unique() %>% 
     plyranges::join_overlap_left(CpGs %>%
-                                   plyranges::filter(type == "shores") %>% 
-                                   plyranges::select(CpG.Shore = type)) %>%
+                                   filter(type == "shores") %>% 
+                                   select(CpG.Shore = type)) %>%
     unique() %>% 
     plyranges::join_overlap_left(CpGs %>%
-                                   plyranges::filter(type == "shelves") %>% 
-                                   plyranges::select(CpG.Shelf = type)) %>%
+                                   filter(type == "shelves") %>% 
+                                   select(CpG.Shelf = type)) %>%
     unique() %>% 
     plyranges::join_overlap_left(CpGs %>%
-                                   plyranges::filter(type == "inter") %>% 
-                                   plyranges::select(Open.Sea = type)) %>%
+                                   filter(type == "inter") %>% 
+                                   select(Open.Sea = type)) %>%
     unique() %>% 
-    plyranges::mutate(CpG.Island = dplyr::case_when(CpG.Island == "islands" ~ "Yes",
+    mutate(CpG.Island = dplyr::case_when(CpG.Island == "islands" ~ "Yes",
                                                     TRUE ~ "No"),
                       CpG.Shore = dplyr::case_when(CpG.Shore == "shores" ~ "Yes",
                                                    TRUE ~ "No"),
@@ -199,7 +199,6 @@ DMReport <- function(sigRegions = sigRegions,
 #' @importFrom glue glue
 #' @importFrom magrittr %>%
 #' @importFrom BiocGenerics unlist
-#' @importFrom plyranges mutate select filter
 #' @importFrom GenomeInfoDb genome
 #' @references Based on \code{annotatr::build_gene_annots()},
 #'  see: \url{https://github.com/rcavalcante/annotatr/blob/master/R/build_annotations.R}
@@ -217,11 +216,11 @@ getExons <- function(TxDb = TxDb){
                      # filter = GeneBiotypeFilter("protein_coding")
                      ) %>%
     BiocGenerics::unlist(use.names = FALSE) %>%
-    plyranges::mutate(id = glue::glue("CDS:{seq_along(.)}"),
+    mutate(id = glue::glue("CDS:{seq_along(.)}"),
                       type = glue::glue("{unique(genome(TxDb))}_genes_cds")
                       ) %>%
-    plyranges::select(id, tx_id, gene_id, symbol, type) # %>%
-    # plyranges::filter(symbol != "")
+    select(id, tx_id, gene_id, symbol, type) # %>%
+    # filter(symbol != "")
   
   GenomeInfoDb::genome(exons) <- NA  
   ensembldb::seqlevelsStyle(exons) <- "UCSC"
@@ -240,7 +239,7 @@ getExons <- function(TxDb = TxDb){
 #' @importFrom GenomeInfoDb keepStandardChromosomes
 #' @importFrom glue glue
 #' @importFrom magrittr %>%
-#' @importFrom plyranges stretch mutate select
+#' @importFrom plyranges stretch
 #' @references Based on \code{annotatr:::build_cpg_annots()},
 #'  see: \url{https://github.com/rcavalcante/annotatr/blob/master/R/build_annotations.R}
 #' @export getCpGs
@@ -254,7 +253,7 @@ getCpGs <- function(genome = genome){
                              col_types = '-cii-------') %>%
     GenomicRanges::makeGRangesFromDataFrame(keep.extra.columns = TRUE) %>%
     GenomeInfoDb::keepStandardChromosomes(pruning.mode = "coarse") %>%
-    plyranges::mutate(id = glue::glue("island:{seq_along(.)}"),
+    mutate(id = glue::glue("island:{seq_along(.)}"),
                       type = "islands")
   
   message('Building CpG shores...')
@@ -263,7 +262,7 @@ getCpGs <- function(genome = genome){
     plyranges::stretch(4000) %>% 
     GenomicRanges::trim() %>%
     GenomicRanges::setdiff(islands) %>%
-    plyranges::mutate(id = glue::glue("shore:{seq_along(.)}"),
+    mutate(id = glue::glue("shore:{seq_along(.)}"),
                       type = "shores")
   
   message('Building CpG shelves...')
@@ -273,7 +272,7 @@ getCpGs <- function(genome = genome){
     GenomicRanges::trim() %>%
     GenomicRanges::setdiff(islands) %>%
     GenomicRanges::setdiff(shores) %>%
-    plyranges::mutate(id = glue::glue("shelf:{seq_along(.)}"),
+    mutate(id = glue::glue("shelf:{seq_along(.)}"),
                       type = "shelves")
   
   message('Building inter-CpG-islands...')
@@ -281,14 +280,14 @@ getCpGs <- function(genome = genome){
   inter_cgi <- c(islands, shores, shelves) %>%
     GenomicRanges::sort() %>%
     GenomicRanges::gaps() %>%
-    plyranges::mutate(id = glue::glue("inter:{seq_along(.)}"),
+    mutate(id = glue::glue("inter:{seq_along(.)}"),
                       type = "inter")
   
   c(islands, shores, shelves, inter_cgi) %>%
     GenomicRanges::sort() %>%
-    plyranges::mutate(tx_id = NA,
+    mutate(tx_id = NA,
                       gene_id = NA,
                       symbol = NA) %>%
-    plyranges::select(id, tx_id, gene_id, symbol, type) %>% 
+    select(id, tx_id, gene_id, symbol, type) %>% 
     return()
 }

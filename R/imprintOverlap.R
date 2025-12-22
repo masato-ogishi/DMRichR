@@ -129,12 +129,10 @@ imprintOverlap <- function(sigRegions = sigRegions,
   
   sigRegions <- sigRegions %>%
     plyranges::as_granges() %>% 
-    DMRichR::annotateRegions(TxDb,
-                             annoDb)
+    annotateRegions(TxDb,annoDb)
   
   regions <- regions %>%
-    DMRichR::annotateRegions(TxDb,
-                             annoDb)
+    annotateRegions(TxDb,annoDb)
   
   # Overlap pipe
   imprintOverlaps <- . %>%
