@@ -211,11 +211,19 @@ slimGO <- function(GO = GO,
     
     if(plots == TRUE){
       p <- rrvgo::scatterPlot(simMatrix, reducedTerms) # Doesn't plot otherwise
-      plot(p) 
+      ggplot2::ggsave(glue::glue("Ontologies/{tool}_slim_rrvgo_scatterPlot_{ont}.pdf"),
+                      plot = plot(p),
+                      device = NULL,
+                      height = 8,
+                      width = 8)
+      pdf(glue::glue("Ontologies/{tool}_slim_rrvgo_treemapPlot_{ont}.pdf"), width=8, height=8)
       rrvgo::treemapPlot(reducedTerms)
+      dev.off()
     }
     
     print(glue::glue("There are {max(reducedTerms$cluster)} clusters in your GO {ont} terms from {tool}"))
+    
+    openxlsx::write.xlsx(reducedTerms, file = glue::glue("Ontologies/{tool}_slim_rrvgo_reducedTerms.xlsx"))
     
     reducedTerms %>%   
       dplyr::as_tibble() %>%

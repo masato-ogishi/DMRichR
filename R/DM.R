@@ -654,13 +654,14 @@ DM.R <- function(genome = c("hg38", "hg19", "mm10", "mm9", "rheMac10",
                              version = "4.0.4")
     
     print(glue::glue("Saving and plotting GREAT results"))
+      
     GREATjob %>%
       rGREAT::getEnrichmentTables(category = "GO") %T>% #%>%
       #purrr::map(~ dplyr::filter(., Hyper_Adjp_BH < 0.05)) %T>%
       openxlsx::write.xlsx(file = glue::glue("Ontologies/GREAT_results.xlsx")) %>%
       DMRichR::slimGO(tool = "rGREAT",
                       annoDb = annoDb,
-                      plots = FALSE) %T>%
+                      plots = TRUE) %T>%
       openxlsx::write.xlsx(file = glue::glue("Ontologies/GREAT_slimmed_results.xlsx")) %>%
       DMRichR::GOplot() %>%
       ggplot2::ggsave(glue::glue("Ontologies/GREAT_plot.pdf"),
@@ -692,7 +693,7 @@ DM.R <- function(genome = c("hg38", "hg19", "mm10", "mm9", "rheMac10",
       openxlsx::write.xlsx(glue::glue("Ontologies/GOfuncR.xlsx")) %>% 
       DMRichR::slimGO(tool = "GOfuncR",
                       annoDb = annoDb,
-                      plots = FALSE) %T>%
+                      plots = TRUE) %T>%
       openxlsx::write.xlsx(file = glue::glue("Ontologies/GOfuncR_slimmed_results.xlsx")) %>% 
       DMRichR::GOplot() %>% 
       ggplot2::ggsave(glue::glue("Ontologies/GOfuncR_plot.pdf"),
@@ -741,7 +742,7 @@ DM.R <- function(genome = c("hg38", "hg19", "mm10", "mm9", "rheMac10",
         openxlsx::write.xlsx(file = glue::glue("Ontologies/enrichr.xlsx")) %>%
         DMRichR::slimGO(tool = "enrichR",
                         annoDb = annoDb,
-                        plots = FALSE) %T>%
+                        plots = TRUE) %T>%
         openxlsx::write.xlsx(file = glue::glue("Ontologies/enrichr_slimmed_results.xlsx")) %>% 
         DMRichR::GOplot() %>% 
         ggplot2::ggsave(glue::glue("Ontologies/enrichr_plot.pdf"),

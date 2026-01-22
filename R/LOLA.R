@@ -17,7 +17,15 @@ chromHMM <- function(sigRegions = sigRegions,
                      regions = regions,
                      cores = cores){
   message("Performing ChromHMM enrichment testing")
-  chromHMM <- LOLA::loadRegionDB(dbLocation = "/share/lasallelab/programs/LOLA/hg38",
+  
+  os_info <- Sys.info()
+  if(os_info["sysname"] == "Linux") {
+    dbPath <- "/mnt/c/Informatics/LOLA/hg38"
+  } else {
+    dbPath <- "C:/Informatics/LOLA/hg38"
+  }
+  
+  chromHMM <- LOLA::loadRegionDB(dbLocation = dbPath,
                                  useCache = TRUE,
                                  limit = NULL,
                                  collections = "Roadmap_ChromHMM") %>%
@@ -160,7 +168,7 @@ roadmap <- function(sigRegions = sigRegions,
                     regions = regions,
                     cores = cores){
   message("Performing Roadmap epigenomics enrichment testing")
-  roadmap <- LOLA::loadRegionDB(dbLocation = "/share/lasallelab/programs/LOLA/hg38",
+  roadmap <- LOLA::loadRegionDB(dbLocation = dbPath,
                                 useCache = TRUE, 
                                 limit = NULL,
                                 collections = "roadmap_epigenomics") %>%
@@ -174,7 +182,7 @@ roadmap <- function(sigRegions = sigRegions,
                                   outFolder = "RoadmapEpigenomics",
                                   includeSplits = FALSE) %>%
     dplyr::as_tibble() %>%
-    dplyr::left_join(readr::read_tsv("/share/lasallelab/programs/LOLA/hg38/roadmap_epigenomics/index.txt"),
+    dplyr::left_join(readr::read_tsv(paste0(dbPath,"/roadmap_epigenomics/index.txt")),
                      by = "filename") %>%
     dplyr::select(oddsRatio, antibody.x, donor, anatomy) %>%
     dplyr::rename(antibody = antibody.x) %>% 
