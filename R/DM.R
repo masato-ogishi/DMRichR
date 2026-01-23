@@ -26,6 +26,7 @@
 #' and will also drop the sex chromosomes. You should also include the sex variable as an
 #' adjustCovariate. 
 #' @param EnsDb Logical indicating whether to to select Ensembl transcript annotation database.
+#' @param dbPath A character string to define the full path for the LOLA database to be used.
 #' This is recommended for non-model organisms. 
 #' @importFrom dmrseq getAnnot dmrseq plotDMRs
 #' @importFrom ggplot2 ggsave
@@ -65,8 +66,8 @@ DM.R <- function(genome = c("hg38", "hg19", "mm10", "mm9", "rheMac10",
                  cores = 20,
                  GOfuncR = TRUE,
                  sexCheck = FALSE,
-                 EnsDb = FALSE){
-  
+                 EnsDb = FALSE,
+                 dbPath = NULL){
   
   # Check dmrseq version 
   if(Biobase::package.version("dmrseq") %>%
@@ -434,12 +435,14 @@ DM.R <- function(genome = c("hg38", "hg19", "mm10", "mm9", "rheMac10",
       
       dmrList[x] %>%
         DMRichR::chromHMM(regions = regions,
-                          cores = floor(cores/3)) %>%
+                          cores = floor(cores/3),
+                          dbPath = dbPath) %>%
         DMRichR::chromHMM_heatmap()
       
       dmrList[x] %>%
         DMRichR::roadmap(regions = regions,
-                         cores = floor(cores/3)) %>% 
+                         cores = floor(cores/3),
+                         dbPath = dbPath) %>% 
         DMRichR::roadmap_heatmap()
       
       if(file.exists("Rplots.pdf")){file.remove("Rplots.pdf")}

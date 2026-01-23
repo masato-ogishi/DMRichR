@@ -5,6 +5,7 @@
 #' @param sigRegions A \code{GRanges} object of significant regions
 #' @param regions A \code{GRanges} object of background regions
 #' @param cores An integer of how many cores to use
+#' @param dbPath A character string to define the full path for the LOLA database to be used
 #' @return A \code{tibble} of enrichment results
 #' @importFrom dplyr as_tibble select mutate summarize pull mutate_if arrange recode_factor
 #' @importFrom tidyr pivot_wider
@@ -15,14 +16,19 @@
 #' 
 chromHMM <- function(sigRegions = sigRegions,
                      regions = regions,
-                     cores = cores){
+                     cores = cores,
+                     dbPath = NULL){
   message("Performing ChromHMM enrichment testing")
   
-  os_info <- Sys.info()
-  if(os_info["sysname"] == "Linux") {
-    dbPath <- "/mnt/c/Informatics/LOLA/hg38"
-  } else {
-    dbPath <- "C:/Informatics/LOLA/hg38"
+  if(is.null(dbPath)){
+    os_info <- Sys.info()
+    if(os_info["sysname"] == "Linux") {
+      dbPath <- "/mnt/c/Informatics/LOLA/hg38"
+    } else {
+      dbPath <- "C:/Informatics/LOLA/hg38"
+    }
+  }else if(!is.character(dbPath)){
+    message("dbPath needs to be a full path for the LOLA database to be used!")
   }
   
   ## Downloaded from: https://egg2.wustl.edu/roadmap/web_portal/chr_state_learning.html
@@ -156,6 +162,7 @@ chromHMM_heatmap <- function(chromHMM = chromHMM){
 #' @param sigRegions A \code{GRanges} object of significant regions
 #' @param regions A \code{GRanges} object of background regions
 #' @param cores An integer of how many cores to use
+#' @param dbPath A character string to define the full path for the LOLA database to be used
 #' @return A \code{tibble} of enrichment results
 #' @importFrom dplyr as_tibble select mutate rename summarize pull mutate_if arrange left_join 
 #'  group_by tally filter
@@ -168,14 +175,19 @@ chromHMM_heatmap <- function(chromHMM = chromHMM){
 #' 
 roadmap <- function(sigRegions = sigRegions,
                     regions = regions,
-                    cores = cores){
+                    cores = cores,
+                    dbPath = NULL){
   message("Performing Roadmap epigenomics enrichment testing")
   
-  os_info <- Sys.info()
-  if(os_info["sysname"] == "Linux") {
-    dbPath <- "/mnt/c/Informatics/LOLA/hg38"
-  } else {
-    dbPath <- "C:/Informatics/LOLA/hg38"
+  if(is.null(dbPath)){
+    os_info <- Sys.info()
+    if(os_info["sysname"] == "Linux") {
+      dbPath <- "/mnt/c/Informatics/LOLA/hg38"
+    } else {
+      dbPath <- "C:/Informatics/LOLA/hg38"
+    }
+  }else if(!is.character(dbPath)){
+    message("dbPath needs to be a full path for the LOLA database to be used!")
   }
   
   roadmap <- LOLA::loadRegionDB(dbLocation = dbPath,

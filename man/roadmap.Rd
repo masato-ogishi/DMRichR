@@ -4,7 +4,12 @@
 \alias{roadmap}
 \title{Chromatin mark enrichments}
 \usage{
-roadmap(sigRegions = sigRegions, regions = regions, cores = cores)
+roadmap(
+  sigRegions = sigRegions,
+  regions = regions,
+  cores = cores,
+  dbPath = NULL
+)
 }
 \arguments{
 \item{sigRegions}{A \code{GRanges} object of significant regions}
@@ -12,6 +17,8 @@ roadmap(sigRegions = sigRegions, regions = regions, cores = cores)
 \item{regions}{A \code{GRanges} object of background regions}
 
 \item{cores}{An integer of how many cores to use}
+
+\item{dbPath}{A character string to define the full path for the LOLA database to be used}
 }
 \value{
 A \code{tibble} of enrichment results

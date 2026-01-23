@@ -19,7 +19,8 @@ DM.R(
   cores = 20,
   GOfuncR = TRUE,
   sexCheck = FALSE,
-  EnsDb = FALSE
+  EnsDb = FALSE,
+  dbPath = NULL
 )
 }
 \arguments{
@@ -59,7 +60,9 @@ This is highly recommended if your analysis has males and females
 and will also drop the sex chromosomes. You should also include the sex variable as an
 adjustCovariate.}
 
-\item{EnsDb}{Logical indicating whether to to select Ensembl transcript annotation database.
+\item{EnsDb}{Logical indicating whether to to select Ensembl transcript annotation database.}
+
+\item{dbPath}{A character string to define the full path for the LOLA database to be used.
 This is recommended for non-model organisms.}
 }
 \description{
