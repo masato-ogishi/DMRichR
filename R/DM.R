@@ -419,7 +419,7 @@ DM.R <- function(genome = c("hg38", "hg19", "mm10", "mm9", "rheMac10",
 
   # ChromHMM and Reference Epigenomes ---------------------------------------
   
-  if(length(grep("genomecenter.ucdavis.edu", .libPaths())) > 0 & genome == "hg38"){
+  if(genome == "hg38"){
     
     dir.create("LOLA")
     setwd("LOLA")
@@ -434,7 +434,7 @@ DM.R <- function(genome = c("hg38", "hg19", "mm10", "mm9", "rheMac10",
       
       dmrList[x] %>%
         DMRichR::chromHMM(regions = regions,
-                          cores = floor(cores/3)) %>% 
+                          cores = floor(cores/3)) %>%
         DMRichR::chromHMM_heatmap()
       
       dmrList[x] %>%

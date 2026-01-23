@@ -25,6 +25,7 @@ chromHMM <- function(sigRegions = sigRegions,
     dbPath <- "C:/Informatics/LOLA/hg38"
   }
   
+  ## Downloaded from: https://egg2.wustl.edu/roadmap/web_portal/chr_state_learning.html
   chromHMM <- LOLA::loadRegionDB(dbLocation = dbPath,
                                  useCache = TRUE,
                                  limit = NULL,
@@ -41,23 +42,24 @@ chromHMM <- function(sigRegions = sigRegions,
     dplyr::as_tibble() %>%
     dplyr::select(oddsRatio, cellType, tissue, antibody) %>%
     dplyr::mutate(antibody = as.factor(antibody)) %>% 
-    dplyr::mutate(antibody = dplyr::recode_factor(antibody,
-                                                  "01_TssA" = "Active TSS",
-                                                  "02_TssAFlnk" = "Flanking Active TSS",
-                                                  "03_TxFlnk" = "Transcription at Gene 5' and 3'",
-                                                  "04_Tx" = "Strong Transcription",
-                                                  "05_TxWk" = "Weak Transcription",
-                                                  "06_EnhG"= "Genic Enhancers",
-                                                  "07_Enh" = "Enhancers",
-                                                  "08_ZnfRpts" = "ZNF Genes & Repeats",
-                                                  "09_Het" = "Heterochromatin",
-                                                  "10_TssBiv" = "Bivalent/Poised TSS",
-                                                  "11_BivFlnk" = "Flanking Bivalent TSS/Enhancer",
-                                                  "12_EnhBiv" = "Bivalent Enhancer",
-                                                  "13_ReprPC" = "Repressed PolyComb",
-                                                  "14_ReprPCwk" = "Weak Repressed PolyComb",
-                                                  "15_Quies" = "Quiescent/Low"
-                                                  )
+    dplyr::mutate(antibody = dplyr::recode_factor(
+      antibody,
+      "01_TssA" = "Active TSS",
+      "02_TssAFlnk" = "Flanking Active TSS",
+      "03_TxFlnk" = "Transcription at Gene 5' and 3'",
+      "04_Tx" = "Strong Transcription",
+      "05_TxWk" = "Weak Transcription",
+      "06_EnhG"= "Genic Enhancers",
+      "07_Enh" = "Enhancers",
+      "08_ZnfRpts" = "ZNF Genes & Repeats",
+      "09_Het" = "Heterochromatin",
+      "10_TssBiv" = "Bivalent/Poised TSS",
+      "11_BivFlnk" = "Flanking Bivalent TSS/Enhancer",
+      "12_EnhBiv" = "Bivalent Enhancer",
+      "13_ReprPC" = "Repressed PolyComb",
+      "14_ReprPCwk" = "Weak Repressed PolyComb",
+      "15_Quies" = "Quiescent/Low"
+    )
                   ) %>%
     dplyr::arrange(antibody) 
   
@@ -168,6 +170,14 @@ roadmap <- function(sigRegions = sigRegions,
                     regions = regions,
                     cores = cores){
   message("Performing Roadmap epigenomics enrichment testing")
+  
+  os_info <- Sys.info()
+  if(os_info["sysname"] == "Linux") {
+    dbPath <- "/mnt/c/Informatics/LOLA/hg38"
+  } else {
+    dbPath <- "C:/Informatics/LOLA/hg38"
+  }
+  
   roadmap <- LOLA::loadRegionDB(dbLocation = dbPath,
                                 useCache = TRUE, 
                                 limit = NULL,
