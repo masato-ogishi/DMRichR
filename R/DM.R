@@ -435,13 +435,13 @@ DM.R <- function(genome = c("hg38", "hg19", "mm10", "mm9", "rheMac10",
       
       dmrList[x] %>%
         DMRichR::chromHMM(regions = regions,
-                          cores = floor(cores/3),
+                          cores = cores,
                           dbPath = dbPath) %>%
         DMRichR::chromHMM_heatmap()
       
       dmrList[x] %>%
         DMRichR::roadmap(regions = regions,
-                         cores = floor(cores/3),
+                         cores = cores,
                          dbPath = dbPath) %>% 
         DMRichR::roadmap_heatmap()
       
@@ -450,7 +450,7 @@ DM.R <- function(genome = c("hg38", "hg19", "mm10", "mm9", "rheMac10",
     
     parallel::mclapply(seq_along(dmrList),
                        LOLA,
-                       mc.cores = 3,
+                       mc.cores = cores,
                        mc.silent = TRUE)
     
     setwd("..")
